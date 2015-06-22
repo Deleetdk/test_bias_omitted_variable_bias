@@ -11,6 +11,7 @@ library(stringr)
 library(psych)
 library(plyr)
 library(DT)
+library(grid)
 
 n = 5000
 
@@ -49,6 +50,20 @@ shinyServer(function(input, output) {
     #get reactive data
     d = reac_d()
     
+    #text
+    r = cor(d$Y, d$Y_hat)
+    r_group = ddply(d, .(group), summarize,
+                    cor = cor(Y, Y_hat))
+    print(r_group)
+    text = str_c("r of prediction with criteria:",
+                 "\nboth groups together: ", round(r, 2),
+                 "\nblue group: ", round(r_group[1, 2], 2),
+                 "\nred group: ", round(r_group[2, 2], 2))
+    
+    text_object = grobTree(textGrob(text, x=.02,  y=.98, hjust=0, vjust = 1), 
+                           gp = gpar(fontsize=11)) #text size
+    
+    
     #plot
     ggplot(d, aes(Y_hat, Y, color = group)) +
       geom_point(alpha = .5) +
@@ -57,8 +72,9 @@ shinyServer(function(input, output) {
       xlab("Predicted criteria score") +
       ylab("Criteria score") +
       scale_color_manual(values = c("#4646ff", "#ff4646"), #, #change colors
-                         name = "Group", #change legend title
-                         labels = c("Blue", "Red")) #change labels 
+                         name = "Group",                   #change legend title
+                         labels = c("Blue", "Red")) +      #change labels 
+      annotation_custom(text_object)
   
   })
   
