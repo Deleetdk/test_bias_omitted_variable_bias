@@ -47,7 +47,7 @@ shinyUI(fluidPage(
                   "The blue group's advantage on trait T",
                   min = -3,
                   max = 3,
-                  value = .5,
+                  value = 1,
                   step = .05)
     ),
 
