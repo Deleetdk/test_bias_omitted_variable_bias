@@ -13,6 +13,8 @@ library(plyr)
 library(DT)
 library(grid)
 
+theme_set(theme_bw())
+
 n = 5000
 
 shinyServer(function(input, output) {
